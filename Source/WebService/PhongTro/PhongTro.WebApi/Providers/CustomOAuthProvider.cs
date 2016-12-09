@@ -3,6 +3,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using PhongTro.Domain.Entities;
 using PhongTro.Domain.Infracstucture;
+using PhongTro.Model.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace PhongTro.WebApi.Providers
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
             var userManager = context.OwinContext.GetUserManager<PhongTroUserManager>();
-            
+
             PhongTroUser user = await userManager.FindAsync(context.UserName, context.Password);
 
             if (null == user)
@@ -58,7 +59,6 @@ namespace PhongTro.WebApi.Providers
             var ticket = new AuthenticationTicket(oAuthIdentity, null);
 
             context.Validated(ticket);
-
         }
     }
 }

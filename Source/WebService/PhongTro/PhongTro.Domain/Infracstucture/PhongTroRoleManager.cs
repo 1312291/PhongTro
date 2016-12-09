@@ -16,19 +16,19 @@ namespace PhongTro.Domain.Infracstucture
     /// </summary>
     public class PhongTroRoleManager : RoleManager<IdentityRole>
     {
-        public PhongTroRoleManager(IRoleStore<IdentityRole, string> roleStore) 
+        public PhongTroRoleManager(IRoleStore<IdentityRole, string> roleStore, IdentityFactoryOptions<PhongTroRoleManager> options) 
             : base(roleStore)
         { }
 
-        /// <summary>
-        /// Method create a new PhongTroRoleManager from app context
-        /// </summary>
-        /// <param name="options">Identity Factory options</param>
-        /// <param name="context">The Owin context</param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// Method create a new PhongTroRoleManager from app context
+        ///// </summary>
+        ///// <param name="options">Identity Factory options</param>
+        ///// <param name="context">The Owin context</param>
+        ///// <returns></returns>
         public static PhongTroRoleManager Create(IdentityFactoryOptions<PhongTroRoleManager> options, IOwinContext context)
         {
-            var appRoleManager = new PhongTroRoleManager(new RoleStore<IdentityRole>(context.Get<PhongTroDbContext>()));
+            var appRoleManager = new PhongTroRoleManager(new RoleStore<IdentityRole>(context.Get<PhongTroDbContext>()), options);
 
             return appRoleManager;
         }

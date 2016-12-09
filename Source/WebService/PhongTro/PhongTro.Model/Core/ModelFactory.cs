@@ -8,8 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhongTro.Model
+namespace PhongTro.Model.Core
 {
+    /// <summary>
+    /// Class is reponsible for convert between Entites and DTO
+    /// </summary>
     public class ModelFactory
     {
         private PhongTroUserManager _AppUserManager;
@@ -17,6 +20,19 @@ namespace PhongTro.Model
         public ModelFactory(PhongTroUserManager userManager)
         {
             _AppUserManager = userManager;
+        }
+
+        public PhongTroUser ConvertToAppUser(RegisteringUserDTO registeringUser)
+        {
+            return new PhongTroUser()
+            {
+                UserName = registeringUser.Username,
+                Email = registeringUser.Email,
+                FirstName = registeringUser.FirstName,
+                LastName = registeringUser.LastName,
+                DateOfBirth = registeringUser.DateOfBirth,
+                PhoneNumber = registeringUser.Phone,
+            };
         }
 
         /// <summary>

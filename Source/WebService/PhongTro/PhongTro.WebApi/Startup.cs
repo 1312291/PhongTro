@@ -1,15 +1,19 @@
-﻿using Microsoft.Owin;
+﻿using Autofac;
+using Autofac.Integration.WebApi;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataHandler.Encoder;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using Owin;
+using PhongTro.Domain.Entities;
 using PhongTro.Domain.Infracstucture;
-using PhongTro.Domain.Migrations;
+using PhongTro.Model.Core;
 using PhongTro.WebApi.Providers;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
@@ -40,7 +44,7 @@ namespace PhongTro.WebApi
         public void Configuration(IAppBuilder app)
         {
             HttpConfiguration httpConfig = new HttpConfiguration();
-            
+
             ConfigureOAuthTokenGeneration(app);
             ConfigureOAuthTokenConsumption(app);
 
@@ -48,7 +52,49 @@ namespace PhongTro.WebApi
 
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
+            ConfigureAutofacDependencies(app, httpConfig);
+
+            app.UseAutofacWebApi(httpConfig);
             app.UseWebApi(httpConfig);
+        }
+        
+        /// <summary>
+        /// Method gets the Autofact integrated with the Web API
+        /// </summary>
+        /// <param name="app">IAppBuilder object supplied at run-time</param>
+        /// <param name="httpConfig">The Http Configuration</param>
+        private void ConfigureAutofacDependencies(IAppBuilder app, HttpConfiguration httpConfig)
+        {
+            var builder = new ContainerBuilder();
+
+            // STANDARD WEB API SETUP:
+            // Register your Web API controllers.
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            // Register components
+            builder.RegisterType<PhongTroDbContext>().AsSelf();
+            builder.Register(c => new UserStore<PhongTroUser>(c.Resolve<PhongTroDbContext>())).AsImplementedInterfaces();
+            builder.RegisterType<PhongTroUserManager>().AsSelf();
+            builder.Register(c => new IdentityFactoryOptions<PhongTroUserManager>
+            {
+                DataProtectionProvider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PhongTro​")
+            });
+            builder.Register(c => new RoleStore<IdentityRole>(c.Resolve<PhongTroDbContext>())).AsImplementedInterfaces();
+            builder.Register(c => new IdentityFactoryOptions<PhongTroRoleManager>
+            {
+                DataProtectionProvider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PhongTro​")
+            });
+            builder.RegisterType<PhongTroRoleManager>().AsSelf();
+
+            builder.RegisterType(typeof(PhongTroRepository)).AsImplementedInterfaces().InstancePerLifetimeScope();
+
+            // set the dependency resolver to be Autofac.
+            var container = builder.Build();
+            httpConfig.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
+            // OWIN WEB API SETUP:
+            // Register the Autofac middleware, then the Autofac Web API middleware, and finally the standard Web API middleware.
+            app.UseAutofacMiddleware(container);
         }
 
         /// <summary>
@@ -57,10 +103,9 @@ namespace PhongTro.WebApi
         /// <param name="app">Param will be supplied by the host at run-time</param>
         private void ConfigureOAuthTokenGeneration(IAppBuilder app)
         {
-            // Configure the db context and user manager to use a single instance per request
+            //Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(PhongTroDbContext.Create);
             app.CreatePerOwinContext<PhongTroUserManager>(PhongTroUserManager.Create);
-            app.CreatePerOwinContext<PhongTroRoleManager>(PhongTroRoleManager.Create);
 
             // Add options to the OAuth server
             OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
@@ -79,7 +124,7 @@ namespace PhongTro.WebApi
             // OAuth 2.0 Bearer Access Token Generation
             app.UseOAuthAuthorizationServer(OAuthServerOptions);
         }
-        
+
         private void ConfigureWebApi(HttpConfiguration config)
         {
             config.MapHttpAttributeRoutes();

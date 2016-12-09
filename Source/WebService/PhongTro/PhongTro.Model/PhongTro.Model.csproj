@@ -62,7 +62,9 @@
     <Compile Include="DTOs\RegisteringUserDTO.cs" />
     <Compile Include="DTOs\RoleDTO.cs" />
     <Compile Include="DTOs\UserDTO.cs" />
-    <Compile Include="ModelFactory.cs" />
+    <Compile Include="Core\IRepository.cs" />
+    <Compile Include="Core\ModelFactory.cs" />
+    <Compile Include="Core\PhongTroRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

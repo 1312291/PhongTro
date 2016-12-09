@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using PhongTro.Domain.Infracstucture;
-using PhongTro.Model;
+using PhongTro.Model.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,19 @@ namespace PhongTro.WebApi.Controllers
         private ModelFactory _modelFactory;
         private PhongTroUserManager _appUserManager = null;
         private PhongTroRoleManager _appRoleManager = null;
+        private IRepository _repository;
+
+        protected IRepository _Repository
+        {
+            get
+            {
+                return _repository;
+            }
+            set
+            {
+                _repository = value;
+            }
+        }
 
         protected PhongTroUserManager _AppUserManager
         {
@@ -35,6 +48,15 @@ namespace PhongTro.WebApi.Controllers
                 }
                 return _modelFactory;
             }
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="repo">The implement of IRepository interface</param>
+        public BaseApiController(IRepository repo)
+        {
+            _Repository = repo;
         }
 
         

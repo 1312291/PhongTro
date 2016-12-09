@@ -18,7 +18,7 @@ namespace PhongTro.Domain.Infracstucture
     /// </summary>
     public class PhongTroUserManager : UserManager<PhongTroUser>
     {
-        public PhongTroUserManager(IUserStore<PhongTroUser> store) : base(store) { }
+        public PhongTroUserManager(IUserStore<PhongTroUser> store, IdentityFactoryOptions<PhongTroUserManager> options) : base(store) { }
 
         /// <summary>
         /// Create a PhongTroUserManager
@@ -31,7 +31,7 @@ namespace PhongTro.Domain.Infracstucture
         public static PhongTroUserManager Create(IdentityFactoryOptions<PhongTroUserManager> options, IOwinContext context)
         {
             var appDbContext = context.Get<PhongTroDbContext>();
-            var appUserManager = new PhongTroUserManager(new UserStore<PhongTroUser>(appDbContext));
+            var appUserManager = new PhongTroUserManager(new UserStore<PhongTroUser>(appDbContext), options);
 
             return appUserManager;
         }

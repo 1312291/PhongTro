@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using PhongTro.Domain.Entities;
 using PhongTro.Domain.Infracstucture;
 using PhongTro.Model;
+using PhongTro.Model.Core;
 using PhongTro.Model.DTOs;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace PhongTro.WebApi.Controllers
     [RoutePrefix("api")]
     public class UserController : BaseApiController
     {
+        public UserController(IRepository repo) : base(repo) { }
+
 
         /// <summary>
         /// Get all users
@@ -32,7 +35,7 @@ namespace PhongTro.WebApi.Controllers
         [Route("users")]
         public IHttpActionResult GetUsers()
         {
-            return Ok(_AppUserManager.Users.ToList().Select(u => _ModelFactory.ConvertFromAppUser(u)));
+            return Ok(_Repository.GetAllUsers());
         }
 
         /// <summary>
@@ -46,15 +49,14 @@ namespace PhongTro.WebApi.Controllers
         [Route("users/{id:guid}", Name = "GetUserById")]
         public async Task<IHttpActionResult> GetUser(string Id)
         {
-            var user = await _AppUserManager.FindByIdAsync(Id);
+            var user = await _Repository.FindUserById(Id);
 
             if (user != null)
             {
-                return Ok(_ModelFactory.ConvertFromAppUser(user));
+                return Ok(user);
             }
 
             return NotFound();
-
         }
 
         /// <summary>
@@ -68,12 +70,11 @@ namespace PhongTro.WebApi.Controllers
         [Route("users/{username}")]
         public async Task<IHttpActionResult> GetUserByName(string username)
         {
-            var user = await _AppUserManager.FindByNameAsync(username);
-            //var user = await _Repository.GetUserByUserName(username);
+            var user = await _Repository.FindUserByUserName(username);
 
             if (user != null)
             {
-                return Ok(_ModelFactory.ConvertFromAppUser(user));
+                return Ok(user);
             }
 
             return NotFound();
@@ -92,27 +93,19 @@ namespace PhongTro.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
+            Tuple<IdentityResult, UserDTO> addUserResult = await _Repository.CreateUser(registeringUser);
+            var identityResult = addUserResult.Item1;
 
-            var user = new PhongTroUser()
+            if (!identityResult.Succeeded)
             {
-                UserName = registeringUser.Username,
-                Email = registeringUser.Email,
-                FirstName = registeringUser.FirstName,
-                LastName = registeringUser.LastName,
-                DateOfBirth = registeringUser.DateOfBirth,
-                PhoneNumber = registeringUser.Phone,
-            };
-
-            IdentityResult addUserResult = await _AppUserManager.CreateAsync(user, registeringUser.Password);
-
-            if (!addUserResult.Succeeded)
-            {
-                return GetErrorResult(addUserResult);
+                return GetErrorResult(identityResult);
             }
 
-            Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.Id }));
+            var resultUser = addUserResult.Item2;
+            Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = resultUser.Id }));
 
-            return Created(locationHeader, _ModelFactory.ConvertFromAppUser(user));
+            return Created(locationHeader, resultUser);
         }
 
         /// <summary>
@@ -131,7 +124,7 @@ namespace PhongTro.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await _AppUserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            IdentityResult result = await _Repository.ChangePassword(User.Identity.GetUserId(), model);
 
             if (!result.Succeeded)
             {
@@ -152,11 +145,11 @@ namespace PhongTro.WebApi.Controllers
         [Route("users/{id:guid}")]
         public async Task<IHttpActionResult> DeleteUser(string id)
         {
-            var appUser = await _AppUserManager.FindByIdAsync(id);
+            var appUser = await _Repository.FindUserById(id);
 
             if (appUser != null)
             {
-                IdentityResult result = await _AppUserManager.DeleteAsync(appUser);
+                IdentityResult result = await _Repository.DeleteUser(id);
 
                 if (!result.Succeeded)
                 {
@@ -185,18 +178,16 @@ namespace PhongTro.WebApi.Controllers
         public async Task<IHttpActionResult> AssignRolesToUser([FromUri] string id, [FromBody] string[] rolesToAssign)
         {
 
-            var appUser = await _AppUserManager.FindByIdAsync(id);
+            var appUser = await _Repository.FindUserById(id);
 
             if (appUser == null)
             {
                 return NotFound();
             }
 
-            var currentRoles = await _AppUserManager.GetRolesAsync(appUser.Id);
-
             // Check if roles which will be assigned are exist in membership system.
             // If they does, return BadRequestResult.
-            var rolesNotExists = rolesToAssign.Except(_AppRoleManager.Roles.Select(x => x.Name)).ToArray();
+            var rolesNotExists = _Repository.GetRolesNotExist(rolesToAssign);
             if (rolesNotExists.Count() > 0)
             {
 
@@ -205,8 +196,7 @@ namespace PhongTro.WebApi.Controllers
             }
 
             // Remove all roles assigned to the user before
-            IdentityResult removeResult = await _AppUserManager.RemoveFromRolesAsync(appUser.Id, currentRoles.ToArray());
-
+            IdentityResult removeResult = await _Repository.RemoveAllRoles(appUser.Id);
             if (!removeResult.Succeeded)
             {
                 ModelState.AddModelError("", "Failed to remove user roles");
@@ -214,8 +204,7 @@ namespace PhongTro.WebApi.Controllers
             }
 
             // Add new roles to the user
-            IdentityResult addResult = await _AppUserManager.AddToRolesAsync(appUser.Id, rolesToAssign);
-
+            IdentityResult addResult = await _Repository.AddRolesToUser(appUser.Id, rolesToAssign);
             if (!addResult.Succeeded)
             {
                 ModelState.AddModelError("", "Failed to add user roles");
