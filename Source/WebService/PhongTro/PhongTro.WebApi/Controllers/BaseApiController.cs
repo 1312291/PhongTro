@@ -11,11 +11,11 @@ using System.Web.Http;
 
 namespace PhongTro.WebApi.Controllers
 {
+    /// <summary>
+    /// Base class for controllers 
+    /// </summary>
     public class BaseApiController : ApiController
     {
-        private ModelFactory _modelFactory;
-        private PhongTroUserManager _appUserManager = null;
-        private PhongTroRoleManager _appRoleManager = null;
         private IRepository _repository;
 
         protected IRepository _Repository
@@ -30,26 +30,6 @@ namespace PhongTro.WebApi.Controllers
             }
         }
 
-        protected PhongTroUserManager _AppUserManager
-        {
-            get
-            {
-                return _appUserManager ?? Request.GetOwinContext().GetUserManager<PhongTroUserManager>();
-            }
-        }
-
-        protected ModelFactory _ModelFactory
-        {
-            get
-            {
-                if (_modelFactory == null)
-                {
-                    _modelFactory = new ModelFactory(_AppUserManager);
-                }
-                return _modelFactory;
-            }
-        }
-
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -59,15 +39,11 @@ namespace PhongTro.WebApi.Controllers
             _Repository = repo;
         }
 
-        
-        protected PhongTroRoleManager _AppRoleManager
-        {
-            get
-            {
-                return _appRoleManager ?? Request.GetOwinContext().GetUserManager<PhongTroRoleManager>();
-            }
-        }
-        
+        /// <summary>
+        /// Determine the type of result
+        /// </summary>
+        /// <param name="result">Object contains the result</param>
+        /// <returns>An IHttpActionResult object</returns>
         protected IHttpActionResult GetErrorResult(IdentityResult result)
         {
             if (result == null)

@@ -58,7 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\ChangingPasswordDTO.cs" />
+    <Compile Include="DTOs\CommentDTO.cs" />
+    <Compile Include="DTOs\CreatingCommentDTO.cs" />
+    <Compile Include="DTOs\CreatingPostDTO.cs" />
     <Compile Include="DTOs\CreatingRoleDTO.cs" />
+    <Compile Include="DTOs\PostDTO.cs" />
+    <Compile Include="DTOs\RateDTO.cs" />
     <Compile Include="DTOs\RegisteringUserDTO.cs" />
     <Compile Include="DTOs\RoleDTO.cs" />
     <Compile Include="DTOs\UserDTO.cs" />

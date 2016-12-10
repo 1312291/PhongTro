@@ -59,7 +59,7 @@ namespace PhongTro.WebApi.Controllers
         /// </summary>
         /// <param name="model">A CreatingRole model</param>
         /// <returns></returns>
-        [Route("create")]
+        [Route("")]
         public async Task<IHttpActionResult> Create(CreatingRoleDTO model)
         {
             if (!ModelState.IsValid)

@@ -18,7 +18,7 @@ namespace PhongTro.WebApi.Controllers
     /// <summary>
     /// Controller is responsible for manage App's accounts
     /// </summary>
-    [RoutePrefix("api")]
+    [RoutePrefix("api/users")]
     public class UserController : BaseApiController
     {
         public UserController(IRepository repo) : base(repo) { }
@@ -32,7 +32,7 @@ namespace PhongTro.WebApi.Controllers
         /// Fail: NotFoundResult.
         /// </returns>
         [Authorize(Roles = "Admin")]
-        [Route("users")]
+        [Route("")]
         public IHttpActionResult GetUsers()
         {
             return Ok(_Repository.GetAllUsers());
@@ -46,7 +46,7 @@ namespace PhongTro.WebApi.Controllers
         /// IHttpActionResult (contains User in form of UserDTO if it is found)
         /// </returns>
         [Authorize(Roles = "Admin")]
-        [Route("users/{id:guid}", Name = "GetUserById")]
+        [Route("{id:guid}", Name = "GetUserById")]
         public async Task<IHttpActionResult> GetUser(string Id)
         {
             var user = await _Repository.FindUserById(Id);
@@ -67,7 +67,7 @@ namespace PhongTro.WebApi.Controllers
         /// IHttpResult (contains User in form of UserDTO if it is found)
         /// </returns>
         [Authorize(Roles= "Admin")]
-        [Route("users/{username}")]
+        [Route("{username}")]
         public async Task<IHttpActionResult> GetUserByName(string username)
         {
             var user = await _Repository.FindUserByUserName(username);
@@ -86,7 +86,7 @@ namespace PhongTro.WebApi.Controllers
         /// </summary>
         /// <param name="registeringUser">Param contains user information for registration</param>
         /// <returns>An IHttpActionResult comes with user info in form of UserDTO</returns>
-        [Route("users")]
+        [Route("")]
         public async Task<IHttpActionResult> CreateUser(RegisteringUserDTO registeringUser)
         {
             if (!ModelState.IsValid)
@@ -116,7 +116,7 @@ namespace PhongTro.WebApi.Controllers
         /// An IHttpActionResult object
         /// </returns>
         [Authorize]
-        [Route("users/changepassword")]
+        [Route("passwords")]
         public async Task<IHttpActionResult> ChangePassword(ChangingPasswordDTO model)
         {
             if (!ModelState.IsValid)
@@ -142,7 +142,7 @@ namespace PhongTro.WebApi.Controllers
         /// IHttpActionResult object
         /// </returns>
         [Authorize(Roles="Admin")]
-        [Route("users/{id:guid}")]
+        [Route("{id:guid}")]
         public async Task<IHttpActionResult> DeleteUser(string id)
         {
             var appUser = await _Repository.FindUserById(id);
@@ -173,7 +173,7 @@ namespace PhongTro.WebApi.Controllers
         /// IHttpActionResult object
         /// </returns>
         [Authorize(Roles = "Admin")]
-        [Route("users/{id:guid}/roles")]
+        [Route("{id:guid}/roles")]
         [HttpPut]
         public async Task<IHttpActionResult> AssignRolesToUser([FromUri] string id, [FromBody] string[] rolesToAssign)
         {
@@ -213,5 +213,7 @@ namespace PhongTro.WebApi.Controllers
 
             return Ok();
         }
+
+
     }
 }

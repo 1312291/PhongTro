@@ -8,6 +8,7 @@ using PhongTro.Domain.Infracstucture;
 using PhongTro.Domain.Entities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace PhongTro.Model.Core
 {
@@ -18,15 +19,20 @@ namespace PhongTro.Model.Core
     {
         private PhongTroUserManager _userManager;
         private PhongTroRoleManager _roleManager;
+        private PhongTroDbContext _dbContext;
         private ModelFactory _modelFactory;
+
+        const bool OK = true;
+        const bool Fail = false;
 
         /// <summary>
         /// Default constructor with dependencies which will be inject later
         /// </summary>
         /// <param name="userManager">The application's User Manager</param>
         /// <param name="roleManager">The application's Role Manager</param>
-        public PhongTroRepository(PhongTroUserManager userManager, PhongTroRoleManager roleManager)
+        public PhongTroRepository(PhongTroDbContext dbContext, PhongTroUserManager userManager, PhongTroRoleManager roleManager)
         {
+            _dbContext = dbContext;
             _userManager = userManager;
             _roleManager = roleManager;
             _modelFactory = new ModelFactory(_userManager);
@@ -111,16 +117,7 @@ namespace PhongTro.Model.Core
 
         public IEnumerable<RoleDTO> GetAllRoles()
         {
-            var roles = _roleManager.Roles;
-
-            List<RoleDTO> results = new List<RoleDTO>();
-
-            foreach(var role in roles)
-            {
-                results.Add(_modelFactory.ConvertFromIdentityRole(role));
-            }
-
-            return results;
+            return _roleManager.Roles.ToList().Select(r => _modelFactory.ConvertFromIdentityRole(r));
         }
 
         public async Task<Tuple<IdentityResult, RoleDTO>> CreateRole(CreatingRoleDTO model)
@@ -137,6 +134,262 @@ namespace PhongTro.Model.Core
             return await _roleManager.DeleteAsync(role);
         }
 
+        #endregion
+
+        #region Post
+
+        public IEnumerable<PostDTO> GetAllPosts()
+        {
+            return _dbContext.Posts.ToList().Select(p => _modelFactory.ConvertToPostDTO(p));
+        }
+
+        public async Task<PostDTO> GetPostById(string id)
+        {
+            var post = await _dbContext.Posts.FirstOrDefaultAsync(p => p.PostID.ToString() == id);
+            
+            return null == post? null : _modelFactory.ConvertToPostDTO(post);
+        }
+
+        public async Task<PostDTO> CreatePost(CreatingPostDTO model)
+        {
+            var user = await _userManager.FindByIdAsync(model.PhongTroUserID);
+
+            if (null != user)
+            {
+                var post = new Post()
+                {
+                    PostID = Guid.NewGuid(),
+                    Address = model.Address,
+                    Price = model.Price,
+                    NumberLodgers = model.NumberLodgers,
+                    Description = model.Description,
+                    PhongTroUserID = user.Id
+                };
+                try
+                {
+                    _dbContext.Posts.Add(post);
+                    _dbContext.SaveChanges();
+
+                    return _modelFactory.ConvertToPostDTO(post);
+                }
+                catch (Exception e)
+                {
+                    string content = e.ToString();
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        public IEnumerable<PostDTO> GetPostsByUser(string id)
+        {
+            return _dbContext.Posts
+                .Where(p => p.PhongTroUserID == id)
+                .ToList()
+                .Select(p => _modelFactory.ConvertToPostDTO(p));
+        }
+
+        public async Task<PostDTO> UpdatePost(string postId, CreatingPostDTO model)
+        {
+            var post = await _dbContext.Posts.FirstOrDefaultAsync(p => p.PostID.ToString() == postId);
+
+            if (null != postId)
+            {
+                post.Address = model.Address;
+                post.Price = model.Price;
+                post.NumberLodgers = model.NumberLodgers;
+                post.Description = model.Description;
+                post.LastUpdate = DateTime.Now;
+
+                try
+                {
+                    _dbContext.SaveChanges();
+
+                    return _modelFactory.ConvertToPostDTO(post);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<PostDTO> GetPostOfUserById(string userId, string postId)
+        {
+            var post = await _dbContext.Posts
+                .FirstOrDefaultAsync(p => p.PhongTroUserID == userId && p.PostID.ToString() == postId);
+
+            return null == post ? null : _modelFactory.ConvertToPostDTO(post);
+        }
+
+        public async Task<bool> DeletePost(string postId)
+        {
+            var post = await _dbContext.Posts
+                .FirstOrDefaultAsync(p => p.PostID.ToString() == postId);
+
+            if (postId != null)
+            {
+                try
+                {
+                    _dbContext.Posts.Remove(post);
+                    _dbContext.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+
+            }
+
+            return false;
+        }
+
+        public IEnumerable<PostDTO> GetFavouritePostsByUser(string id)
+        {
+            return _dbContext.FavouritePosts
+                            .Include(p => p.Post)
+                            .Where(p => p.PhongTroUserID.ToString() == id)
+                            .ToList()
+                            .Select(p => _modelFactory.ConvertToPostDTO(p.Post));
+        }
+
+        public async Task<bool> AddFavouritePost(string userId, string postId)
+        {
+            var post = await _dbContext.FavouritePosts
+                .FirstOrDefaultAsync(p => p.PostID.ToString() == postId && p.PhongTroUserID == userId);
+
+            if (null == post)
+            {
+                try
+                {
+                    _dbContext.FavouritePosts.Add(new FavouritePost()
+                    {
+                        FavouritePostID = Guid.NewGuid(),
+                        PhongTroUserID = userId,
+                        PostID = Guid.Parse(postId)
+                    });
+                    _dbContext.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        public async Task<bool> RemoveFavouritePost(string userId, string postId)
+        {
+            var post = await _dbContext.FavouritePosts
+                .FirstOrDefaultAsync(p => p.PostID.ToString() == postId && p.PhongTroUserID == userId);
+
+            if (null != post)
+            {
+                try
+                {
+                    _dbContext.FavouritePosts.Remove(post);
+                    _dbContext.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        public async Task<RateDTO> RatePost(string postId, float value)
+        {
+            var post = await _dbContext.Posts.FirstOrDefaultAsync(p => p.PostID.ToString() == postId);
+
+            // update the rate values
+            post.NumberReviewers += 1;
+            post.TotalPoint += value;
+
+            try
+            {
+                _dbContext.SaveChanges();
+                return _modelFactory.ConvertToRateDTO(post);
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Comment
+
+        public async Task<CommentDTO> CreateComment(CreatingCommentDTO model)
+        {
+            var comment = new Comment()
+            {
+                CommentID = Guid.NewGuid(),
+                PhongTroUserID = model.UserId,
+                PostID = Guid.Parse(model.PostId),
+                Content = model.Content
+            };
+
+            try
+            {
+                _dbContext.Comments.Add(comment);
+                _dbContext.SaveChanges();
+
+                comment.PhongTroUser = await _userManager.FindByIdAsync(comment.PhongTroUserID);
+                return _modelFactory.ConvertToCommentDTO(comment);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public IEnumerable<CommentDTO> GetAllCommentsByPost(string postId)
+        {
+            return _dbContext.Comments
+                .Include(c => c.PhongTroUser)
+                .Where(c => c.PostID.ToString() == postId)
+                .ToList()
+                .Select(c => _modelFactory.ConvertToCommentDTO(c));
+        }
+
+        public async Task<bool> CheckCommentOwner(string userId, string commentId)
+        {
+            var comment = await _dbContext.Comments
+                .FirstOrDefaultAsync(c => c.PhongTroUserID == userId && c.CommentID.ToString() == commentId);
+
+            return comment != null;
+        }
+
+        public async Task<bool> DeleteComment(string commentId)
+        {
+            var comment = await _dbContext.Comments
+                .FirstOrDefaultAsync(c => c.CommentID.ToString() == commentId);
+
+            try
+            {
+                _dbContext.Comments.Remove(comment);
+                _dbContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
         #endregion
     }
 }

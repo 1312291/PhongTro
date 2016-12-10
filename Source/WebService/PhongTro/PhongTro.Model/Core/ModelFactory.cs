@@ -74,5 +74,55 @@ namespace PhongTro.Model.Core
             };
         }
 
+        /// <summary>
+        /// Convert an Post entity to DTO object
+        /// </summary>
+        /// <param name="post">Entity to be converted</param>
+        /// <returns></returns>
+        public PostDTO ConvertToPostDTO(Post post)
+        {
+            return new PostDTO
+            {
+                Id = post.PostID.ToString(),
+                Address = post.Address,
+                Price = post.Price,
+                NumberLodgers = post.NumberLodgers,
+                Description = post.Description,
+                PostDate = post.PostDate,
+                LastUpdate = post.LastUpdate,
+                TotalPoint = post.TotalPoint,
+                NumberReviewers = post.NumberReviewers,
+                PhongTroUserID = post.PhongTroUserID.ToString()
+            };
+        }
+
+        /// <summary>
+        /// Convert a Comment entity to a DTO object
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        public CommentDTO ConvertToCommentDTO(Comment comment)
+        {
+            return new CommentDTO()
+            {
+                CommentId = comment.CommentID.ToString(),
+                UserId = comment.PhongTroUserID,
+                FirstName = comment.PhongTroUser.FirstName,
+                LastName = comment.PhongTroUser.LastName,
+                PostId = comment.PostID.ToString(),
+                Content = comment.Content,
+                DateComment = comment.DateComment
+            };
+        }
+
+        public RateDTO ConvertToRateDTO(Post post)
+        {
+            return new RateDTO()
+            {
+                PostId = post.PostID.ToString(),
+                NumberReviewers = post.NumberReviewers,
+                TotalPoint = post.TotalPoint
+            };
+        }
     }
 }

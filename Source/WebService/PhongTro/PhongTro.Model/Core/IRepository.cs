@@ -35,6 +35,7 @@ namespace PhongTro.Model.Core
         /// <param name="username">User name of user to be searched</param>
         /// <returns>A UserDTO object</returns>
         Task<UserDTO> FindUserByUserName(string username);
+        
 
         /// <summary>
         /// Create a user by receiving information from a RegisteringUserDTO object
@@ -60,6 +61,7 @@ namespace PhongTro.Model.Core
         /// <param name="id">The identifier of user to be deleted</param>
         /// <returns>The IdentityResult object indicates the operation result</returns>
         Task<IdentityResult> DeleteUser(string id);
+        
 
         /// <summary>
         /// Get roles given in the param that not exists in Role system
@@ -116,6 +118,118 @@ namespace PhongTro.Model.Core
         /// <param name="id">Identifier of the role to be deleted</param>
         /// <returns>An IdentifyResult object indicates operation's result</returns>
         Task<IdentityResult> DeleteRole(string id);
+
+        #endregion
+
+        #region Post
+
+        /// <summary>
+        /// Get all posts from database
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<PostDTO> GetAllPosts();
+
+        /// <summary>
+        /// Get a post by searching its id
+        /// </summary>
+        /// <param name="id">The identifier of the post to be searched</param>
+        /// <returns>A PostDTO object</returns>
+        Task<PostDTO> GetPostById(string id);
+
+        /// <summary>
+        /// Create a new post
+        /// </summary>
+        /// <param name="model">Object contains post data</param>
+        /// <returns></returns>
+        Task<PostDTO> CreatePost(CreatingPostDTO model);
+
+        /// <summary>
+        /// Get posts belong to a user
+        /// </summary>
+        /// <param name="id">Identifier of user</param>
+        /// <returns>List of PostDTO object</returns>
+        IEnumerable<PostDTO> GetPostsByUser(string id);
+
+        /// <summary>
+        /// Get all posts owned by a user
+        /// </summary>
+        /// <param name="userId">Identifier of user</param>
+        /// <param name="postId">Identifier of the post</param>
+        /// <returns></returns>
+        Task<PostDTO> GetPostOfUserById(string userId, string postId);
+
+        /// <summary>
+        /// Update a post with new data
+        /// </summary>
+        /// <param name="postId">Identifier of the post</param>
+        /// <param name="model">Contain update data</param>
+        /// <returns></returns>
+        Task<PostDTO> UpdatePost(string postId, CreatingPostDTO model);
+
+        /// <summary>
+        /// Delete a post
+        /// </summary>
+        /// <param name="postId">Identifier of the post to be deleted</param>
+        /// <returns></returns>
+        Task<bool> DeletePost(string postId);
+
+        /// <summary>
+        /// Get all post from a user's favourite list
+        /// </summary>
+        /// <param name="id">Identifier of the user</param>
+        /// <returns></returns>
+        IEnumerable<PostDTO> GetFavouritePostsByUser(string id);
+
+        /// <summary>
+        /// Add a post to user's favourite list
+        /// </summary>
+        /// <param name="userId">Identifier of the user</param>
+        /// <param name="postId">Identifier of the post</param>
+        /// <returns></returns>
+        Task<bool> AddFavouritePost(string userId, string postId);
+
+        /// <summary>
+        /// Remove a post from a user's favourite list
+        /// </summary>
+        /// <param name="userId">Identifier of the user</param>
+        /// <param name="postId">Identifier of the post</param>
+        /// <returns></returns>
+        Task<bool> RemoveFavouritePost(string userId, string postId);
+
+        Task<RateDTO> RatePost(string postId, float value);
+
+        #endregion
+
+        #region Comment
+
+        /// <summary>
+        /// Get all comment of a specified post
+        /// </summary>
+        /// <param name="postId">Identifer of the post</param>
+        /// <returns></returns>
+        IEnumerable<CommentDTO> GetAllCommentsByPost(string postId);
+
+        /// <summary>
+        /// Add a comment to a post
+        /// </summary>
+        /// <param name="model">Contains comment data, including userId, postId and content</param>
+        /// <returns></returns>
+        Task<CommentDTO> CreateComment(CreatingCommentDTO model);
+
+        /// <summary>
+        /// Check if this comment is owned by this user
+        /// </summary>
+        /// <param name="userId">Identifier of the user</param>
+        /// <param name="commentId">Identifier of the comment</param>
+        /// <returns></returns>
+        Task<bool> CheckCommentOwner(string userId, string commentId);
+
+        /// <summary>
+        /// Delete a comment
+        /// </summary>
+        /// <param name="commentId">Identifier of the comment</param>
+        /// <returns></returns>
+        Task<bool> DeleteComment(string commentId);
 
         #endregion
     }

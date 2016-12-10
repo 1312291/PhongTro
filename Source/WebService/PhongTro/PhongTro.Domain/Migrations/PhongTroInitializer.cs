@@ -29,7 +29,8 @@ namespace PhongTro.Domain.Migrations
 
         // The keys references to values in Role.config
         const string KeyRoleAdmin = "Admin";
-        const string KeyRoleUser = "User";
+        const string KeyRoleLodger = "Lodger";
+        const string KeyRoleLandlord = "Landlord";
         #endregion
 
         protected override void Seed(PhongTroDbContext context)
@@ -60,12 +61,13 @@ namespace PhongTro.Domain.Migrations
             if (roleManager.Roles.Count() == 0)
             {
                 roleManager.Create(new IdentityRole { Name = roleConfig[KeyRoleAdmin] });
-                roleManager.Create(new IdentityRole { Name = roleConfig[KeyRoleUser] });
+                roleManager.Create(new IdentityRole { Name = roleConfig[KeyRoleLodger] });
+                roleManager.Create(new IdentityRole { Name = roleConfig[KeyRoleLandlord] });
             }
 
             // assign Admin role to the administrator
             var adminUser = userManager.FindByName(userConfig[KeyUserName]);
-            userManager.AddToRoles(adminUser.Id, new string[] { roleConfig[KeyRoleAdmin] });
+            userManager.AddToRoles(adminUser.Id, new string[] { roleConfig[KeyRoleAdmin], "Lodger", "Landlord" });
         }
     }
 }
