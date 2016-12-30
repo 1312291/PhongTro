@@ -53,5 +53,9 @@ namespace PhongTro.Model.DTOs
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number")]
         public string Phone { get; set; }
+
+        [Required]
+        [Display(Name = "Role")]
+        public string[] Roles { get; set; }
     }
 }

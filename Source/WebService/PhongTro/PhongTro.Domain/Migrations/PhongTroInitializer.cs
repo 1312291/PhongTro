@@ -50,7 +50,8 @@ namespace PhongTro.Domain.Migrations
                 LastName = userConfig[KeyLastName],
                 DateOfBirth = new DateTime(int.Parse(userConfig[KeyYearBirth]),
                                            int.Parse(userConfig[KeyMonthBirth]),
-                                           int.Parse(userConfig[KeyDayBirth]))
+                                           int.Parse(userConfig[KeyDayBirth])),
+                PhoneNumber = userConfig[KeyPhone]
             };
 
             userManager.Create(user, userConfig[KeyPassword]);

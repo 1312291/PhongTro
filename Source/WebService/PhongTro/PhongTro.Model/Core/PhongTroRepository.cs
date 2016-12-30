@@ -25,6 +25,8 @@ namespace PhongTro.Model.Core
         const bool OK = true;
         const bool Fail = false;
 
+        const string RoleAdmin = "Admin";
+
         /// <summary>
         /// Default constructor with dependencies which will be inject later
         /// </summary>
@@ -69,7 +71,19 @@ namespace PhongTro.Model.Core
 
             if (identityResult.Succeeded)
             {
-                 userResult = _modelFactory.ConvertFromAppUser(user);
+                var rolesAssigned = registeringUser.Roles.Except(new string[] { RoleAdmin });
+                var rolesNotExists = GetRolesNotExist(rolesAssigned.ToArray());
+
+                if ((rolesNotExists.Count() > 0) || (rolesAssigned.Count() == 0))
+                {
+                    identityResult = new IdentityResult(string.Format("Roles '{0}' does not exixts in the system", string.Join(",", rolesNotExists)));
+                    await _userManager.DeleteAsync(user);
+                }
+                else
+                {
+                    identityResult = _userManager.AddToRoles(user.Id, rolesAssigned.ToArray());
+                    userResult = _modelFactory.ConvertFromAppUser(user);
+                }
             }
             
             return new Tuple<IdentityResult, UserDTO>(identityResult, userResult);
