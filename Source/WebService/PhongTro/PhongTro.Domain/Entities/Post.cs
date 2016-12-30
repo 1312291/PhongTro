@@ -29,7 +29,7 @@ namespace PhongTro.Domain.Entities
         public string Description { get; set; }
 
         public DateTime PostDate { get; set; } = DateTime.Now;
-        public DateTime? LastUpdate { get; set; }
+        public DateTime? LastUpdate { get; set; } = DateTime.Now;
         public float TotalPoint { get; set; } = 0;
         public float NumberReviewers { get; set; } = 0;
         public string PhongTroUserID { get; set; }
