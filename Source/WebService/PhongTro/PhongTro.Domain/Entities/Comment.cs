@@ -16,11 +16,16 @@ namespace PhongTro.Domain.Entities
         [MaxLength(500)]
         public string Content { get; set; }
         
-        public DateTime DateComment { get; set; } = DateTime.Now;
+        public DateTime DateComment { get; set; }
         public Guid PostID { get; set; }
         public string PhongTroUserID { get; set; }
 
         public virtual Post Post { get; set; }
         public virtual PhongTroUser PhongTroUser { get; set; }
+
+        public Comment()
+        {
+            DateComment = DateTime.Now;
+        }
     }
 }

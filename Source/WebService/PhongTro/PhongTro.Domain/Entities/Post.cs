@@ -28,8 +28,8 @@ namespace PhongTro.Domain.Entities
         [MaxLength(500)]
         public string Description { get; set; }
 
-        public DateTime PostDate { get; set; } = DateTime.Now;
-        public DateTime? LastUpdate { get; set; } = DateTime.Now;
+        public DateTime PostDate { get; set; }
+        public DateTime? LastUpdate { get; set; }
         public float TotalPoint { get; set; } = 0;
         public float NumberReviewers { get; set; } = 0;
         public string PhongTroUserID { get; set; }
@@ -39,5 +39,11 @@ namespace PhongTro.Domain.Entities
         public virtual ICollection<BoardingHouseImage> Images { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<FavouritePost> FavouritePosts { get; set; }
+
+        public Post()
+        {
+            PostDate = DateTime.Now;
+            LastUpdate = DateTime.Now;
+        }
     }
 }
