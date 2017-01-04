@@ -30,8 +30,8 @@ namespace PhongTro.Domain.Entities
 
         public DateTime PostDate { get; set; }
         public DateTime? LastUpdate { get; set; }
-        public float TotalPoint { get; set; } = 0;
-        public float NumberReviewers { get; set; } = 0;
+        public float TotalPoint { get; set; }
+        public float NumberReviewers { get; set; }
         public string PhongTroUserID { get; set; }
 
         public virtual PhongTroUser PhongTroUser { get; set; }
@@ -44,6 +44,8 @@ namespace PhongTro.Domain.Entities
         {
             PostDate = DateTime.Now;
             LastUpdate = DateTime.Now;
+            TotalPoint = 0;
+            NumberReviewers = 0;
         }
     }
 }
