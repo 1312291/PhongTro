@@ -3,7 +3,7 @@
 
 This repository includes 
 
-  - PhongTro Web service
+  - PhongTro Web service : link deloy: http://timphongtro.apphb.com/
   - PhongTro Web application
 
 
