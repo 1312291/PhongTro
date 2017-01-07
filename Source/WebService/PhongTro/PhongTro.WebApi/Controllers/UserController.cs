@@ -39,6 +39,25 @@ namespace PhongTro.WebApi.Controllers
         }
 
         /// <summary>
+        /// Get user's data when successfully logging in
+        /// </summary>
+        /// <returns>User's data in form of a UserDTO</returns>
+        [Authorize]
+        [Route("info")]
+        public async Task<IHttpActionResult> GetUsersInfo()
+        {
+            string username = User.Identity.Name;
+            var user = await _Repository.FindUserByUserName(username);
+
+            if (user != null)
+            {
+                return Ok(user);
+            }
+
+            return NotFound();
+        }
+
+        /// <summary>
         /// Get User by Identifier filter 
         /// </summary>
         /// <param name="Id">The identifier</param>
