@@ -188,6 +188,7 @@ namespace PhongTro.Model.Core
                     {
                         _dbContext.BoardingHouseImages.Add(new BoardingHouseImage()
                         {
+                            BoardingHouseImageID = Guid.NewGuid(),
                             Post = post,
                             Url = img
                         });
