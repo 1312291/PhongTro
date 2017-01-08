@@ -5,12 +5,12 @@
 
 <!-- banner -->
 <div class="banner">    	   
-    <img src="images/photos/banner.jpg"  class="img-responsive" alt="slide">
+    <img src="images/photos/banner4.png"  class="img-responsive" alt="slide">
     <div class="welcome-message">
         <div class="wrap-info">
             <div class="information">
-                <h1  class="animated fadeInDown">Best hotel in Dubai</h1>
-                <p class="animated fadeInUp">Most luxurious hotel of asia with the royal treatments and excellent customer service.</p>                
+                <h1  class="animated fadeInDown">Tìm phòng trọ thật dễ</h1>
+                <p class="animated fadeInUp">Website tìm phòng trọ với nhiều đánh giá khác nhau từ người dùng.</p>                
             </div>
             <a href="#information" class="arrow-nav scroll wowload fadeInDownBig"><i class="fa fa-angle-down"></i></a>
         </div>
@@ -159,7 +159,7 @@
                 <a class="right carousel-control" href="#TourCarousel" role="button" data-slide="next"><i class="fa fa-angle-right"></i></a>
             </div>
             <!-- RoomCarousel-->
-            <div class="caption">Tour Packages<a href="gallery.php" class="pull-right"><i class="fa fa-edit"></i></a></div>
+            <div class="caption">Hình ảnh<a href="gallery.php" class="pull-right"><i class="fa fa-edit"></i></a></div>
         </div>
 
 
@@ -167,16 +167,14 @@
             <!-- RoomCarousel -->
             <div id="FoodCarousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
-                <div class="item active"><img src="images/photos/1.jpg" class="img-responsive" alt="slide"></div>
-                <div class="item  height-full"><img src="images/photos/2.jpg"  class="img-responsive" alt="slide"></div>
-                <div class="item  height-full"><img src="images/photos/5.jpg"  class="img-responsive" alt="slide"></div>
+                <div class="item active"><img src="images/photos/login_icon.png" class="img-responsive" alt="slide"></div>
                 </div>
                 <!-- Controls -->
                 <a class="left carousel-control" href="#FoodCarousel" role="button" data-slide="prev"><i class="fa fa-angle-left"></i></a>
                 <a class="right carousel-control" href="#FoodCarousel" role="button" data-slide="next"><i class="fa fa-angle-right"></i></a>
             </div>
             <!-- RoomCarousel-->
-            <div class="caption">Food and Drinks<a href="gallery.php" class="pull-right"><i class="fa fa-edit"></i></a></div>
+            <div class="caption">Tài Khoản<a href="gallery.php" class="pull-right"><i class="fa fa-edit"></i></a></div>
         </div>
     </div>
 </div>

@@ -6,18 +6,19 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-5">
-                    <h4>Holiday Crown</h4>
-                    <p>Holiday Crown was these three and songs arose whose. Of in vicinity contempt together in possible branched. Assured company hastily looking garrets in oh. Most have love my gone to this so. Discovered interested prosperous the our affronting insipidity day. Missed lovers way one vanity wishes nay but. Use shy seemed within twenty wished old few regret passed. Absolute one hastened mrs any sensible. </p>
+                    <h4>Tìm Phòng Trọ</h4>
+                    <p>Tìm phòng trọ nhanh giá cả họp lý, đầy đủ thông tin 
+                    phòng trọ và người chủ phòn trọ. Có 1 bộ lọc dễ dàng. 
+                    Trực tiếp liên hệ với chủ phòng trọ. Chủ phòng trọ có 
+                    kênh quảng cáo, giới thiệu phòng trọ của mình miễn phí. </p>
                 </div>              
                  
                  <div class="col-sm-3">
                     <h4>Quick Links</h4>
                     <ul class="list-unstyled">
-                        <li><a href="rooms-tariff.php">Rooms & Tariff</a></li>        
-                        <li><a href="introduction.php">Introduction</a></li>
-                        <li><a href="gallery.php">Gallery</a></li>
-                        <li><a href="tour.php">Tour Packages</a></li>
-                        <li><a href="contact.php">Contact</a></li>
+                        <li><a href="rooms-tariff.php">Phòng Trọ</a></li>        
+                        <li><a href="introduction.php">Liên Hệ</a></li>
+                        <li><a href="gallery.php">Tài Khoản</a></li>
                     </ul>
                 </div>
                  <div class="col-sm-4 subscribe">
@@ -29,12 +30,8 @@
                     </span>
                     </div>
                     <div class="social">
-                    <a href="#"><i class="fa fa-facebook-square" data-toggle="tooltip" data-placement="top" data-original-title="facebook"></i></a>
-                    <a href="#"><i class="fa fa-instagram"  data-toggle="tooltip" data-placement="top" data-original-title="instragram"></i></a>
-                    <a href="#"><i class="fa fa-twitter-square" data-toggle="tooltip" data-placement="top" data-original-title="twitter"></i></a>
-                    <a href="#"><i class="fa fa-pinterest-square" data-toggle="tooltip" data-placement="top" data-original-title="pinterest"></i></a>
-                    <a href="#"><i class="fa fa-tumblr-square" data-toggle="tooltip" data-placement="top" data-original-title="tumblr"></i></a>
-                    <a href="#"><i class="fa fa-youtube-square" data-toggle="tooltip" data-placement="top" data-original-title="youtube"></i></a>
+                    <a href="https://www.facebook.com/sonpham1995"><i class="fa fa-facebook-square" data-toggle="tooltip" data-placement="top" data-original-title="facebook"></i></a>
+                    <a href="https://www.linkedin.com/in/ph%E1%BA%A1m-s%C6%A1n-8b6515126?trk=hp-identity-name"><i class="fa fa-linkedin-square" data-toggle="tooltip" data-placement="top" data-original-title="linkedin"></i></a>
                     </div>
                 </div>
             </div>
