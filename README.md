@@ -3,7 +3,7 @@
 
 This repository includes 
 
-  - PhongTro Web service : link deloy: http://timphongtro.apphb.com/
+  - PhongTro Web service
   - PhongTro Web application
 
 
@@ -19,7 +19,7 @@ PhongTro Web service is built by RESTful architecture with the help of the power
 
 #### Deployment
 
-A completely version of PhongTro Web service can be found at https://phongtro.apphb.com/
+A completely version of PhongTro Web service can be found at  http://timphongtro.apphb.com/
 
 
 ### PhongTro Web Application
