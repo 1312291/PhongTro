@@ -32,11 +32,18 @@
 <link rel="icon" href="images/favicon.png" type="image/x-icon">
 
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/account.css">
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>  
 <script type="text/javascript" src="assets/js/timphongtro.js"></script>
+
+<meta name="google-signin-client_id" content="64175708162-c1ijo9p50aeph724nn3n75vqmtibtmg3.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
+<script type="text/javascript" src="assets/js/login.js"></script>
+
 </head>
 
-<body id="home">
+<body id="home" ng-app="timphongtro">
+<div ng-controller="timphongtroController">
 
 
 <!-- top 
@@ -63,32 +70,16 @@
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
-      
-      <ul class="nav navbar-nav">        
-        <li><a href="index.php">Trang Chủ </a></li>
-        <li><a href="rooms-tariff.php">Phòng Trọ</a></li>        
-        <li><a href="contact.php">Liên Hệ</a></li>
-        <li><a href="account.php">Đăng Nhập</a></li>
-      </ul>
-    </div><!-- Wnavbar-collapse -->
+    <div >
+      <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">        
+          <li><a href="index.php">Trang Chủ </a></li>
+          <li><a href="rooms-tariff.php">Phòng Trọ</a></li>        
+          <li><a href="contact.php">Liên Hệ</a></li>
+          <li><a href="{{link_login}}">{{login}}</a></li>
+        </ul>
+      </div><!-- Wnavbar-collapse -->
+    </div>
   </div><!-- container-fluid -->
 </nav>
 <!-- header -->
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '1847995112113203',
-      xfbml      : true,
-      version    : 'v2.8'
-    });
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>

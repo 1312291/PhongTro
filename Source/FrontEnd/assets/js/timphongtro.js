@@ -1,5 +1,5 @@
-angular.module('formExample', [])
-.controller('ExampleController', function ($scope, $http) {
+angular.module('timphongtro', [])
+.controller('timphongtroController', function ($window,$scope, $http) {
 
 	$scope.host = "http://timphongtro.apphb.com/";
 	$scope.title = "Send request to server, choose method please!";
@@ -11,7 +11,6 @@ angular.module('formExample', [])
     $scope.DestinationData = [];
     $scope.Flights = [];
     $scope.Seats = [];
-    
     
     $scope.initPhongTroPage = function(){
         $scope.getAllPost();  
@@ -50,10 +49,60 @@ angular.module('formExample', [])
             alert($scope.title);
         });
 	};
-    
-    
-    
 
+
+//login
+    $scope.login = "Đăng Nhập";
+    $scope.link_login = "login.php";
+    if(getCookie("access_token")){
+        $scope.login = "Tài Khoản";
+        $scope.link_login = "account.php";
+    }
+    $scope.loginNormal = function(){
+        var email = document.getElementsByName("user")[0].value;
+        var password = document.getElementsByName("pass")[0].value;
+        login(email,password);
+    };
+    
 });
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function login(email,password) {
+    $.ajax({
+        url: "http://timphongtro.apphb.com/api/users/login", 
+        type: "POST",
+        data: {
+            username: email,
+            password: password,
+            grant_type: "password"
+        },
+        error: function(xhr,status,error){
+            alert("Login Fail");
+        },
+        success: function(result){
+            setCookie("access_token",result.access_token,365);
+            window.open("http://localhost:8080/hotel","_self")
+        }
+    });
+}

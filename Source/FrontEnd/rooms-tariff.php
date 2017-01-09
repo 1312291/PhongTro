@@ -7,12 +7,12 @@
 
 <!-- form -->
 
-<div class="row" ng-app="formExample">
-  <div class="main-agileinfo" ng-controller="ExampleController" data-ng-init="initPhongTroPage()">
+<div class="row">
+  <div class="main-agileinfo" data-ng-init="initPhongTroPage()">
       <div class="animate-repeat" ng-repeat="phongtro in listPostData">
         <div class="col-sm-6  fadeInUp">
           <div class="rooms">
-            <img src="{{phongtro.images[0]}}" class="img-responsive">
+            <img src="{{phongtro.images[0]}}" class="img-responsive" style="max-height: 346px">
               <div class="info">
                 <h3>{{phongtro.address}}</h3>
                 <p> {{phongtro.description}}</p>
