@@ -22,7 +22,7 @@
                   <li >Rate: {{phongtro.rate}}/5.0 </li>
                   <li >Đăng ngày: {{phongtro.lastUpdate}}</li>
                 </p>
-                <a href="room-details.php" class="btn btn-default">Check Details</a>
+                <button ng-click="detailsRoom(phongtro.id);" class="btn btn-default">Check Details</button>
               </div>
           </div>
         </div>

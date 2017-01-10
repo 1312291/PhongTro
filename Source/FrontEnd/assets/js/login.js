@@ -21,7 +21,7 @@ function onSuccess(googleUser) {
                     DateOfBirth: "11-09-1995",
                     Phone: "01665023317",
                     Roles: [
-                        "Landlord"
+                        "Lodger"
                     ]
                 },
                 error: function(xhr,status,error){

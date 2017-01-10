@@ -12,7 +12,6 @@
 <!-- font awesome -->
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
-
 <!-- bootstrap -->
 <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
 
@@ -31,6 +30,7 @@
 <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
 <link rel="icon" href="images/favicon.png" type="image/x-icon">
 
+
 <link rel="stylesheet" href="assets/style.css">
 <link rel="stylesheet" href="assets/account.css">
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>  
@@ -39,6 +39,8 @@
 <meta name="google-signin-client_id" content="64175708162-c1ijo9p50aeph724nn3n75vqmtibtmg3.apps.googleusercontent.com">
 <script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
 <script type="text/javascript" src="assets/js/login.js"></script>
+
+
 
 </head>
 

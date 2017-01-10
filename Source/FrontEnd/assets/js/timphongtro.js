@@ -2,8 +2,7 @@ angular.module('timphongtro', [])
 .controller('timphongtroController', function ($window,$scope, $http) {
 
 	$scope.host = "http://timphongtro.apphb.com/";
-	$scope.title = "Send request to server, choose method please!";
-    $token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOiJiYzI2ODY3Yi1lZmU0LTQ5NTktYTgwZS01YTYzNjVmNmI1N2YiLCJ1bmlxdWVfbmFtZSI6ImRja2hvYW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL2FjY2Vzc2NvbnRyb2xzZXJ2aWNlLzIwMTAvMDcvY2xhaW1zL2lkZW50aXR5cHJvdmlkZXIiOiJBU1AuTkVUIElkZW50aXR5IiwiQXNwTmV0LklkZW50aXR5LlNlY3VyaXR5U3RhbXAiOiJjYTY3NWRjNy00NjA3LTRmYjYtYmNhNS1lZTNjOGY5OTYyOGQiLCJyb2xlIjpbIkFkbWluIiwiTGFuZGxvcmQiLCJMb2RnZXIiXSwiaXNzIjoiUGhvbmdUcm9BdXRoZW50aWNhdGlvbiIsImF1ZCI6IjQxNGUxZTM3YTM4ODRmNjhhYmM0M2Y3MjgzODM3ZmQxIiwiZXhwIjoxNDgzODY4ODU4LCJuYmYiOjE0ODM3ODI0NTh9.e330IRw39Qk1udzyOdiZx3RTINhqJqfr4m5muwZzOqE"
+	$scope.title = "Send request to server, choose method please!";    
 
     $scope.dateDepart = "";
     $scope.dateReturn = "";
@@ -20,7 +19,7 @@ angular.module('timphongtro', [])
     $scope.getAllPost = function () {
     var config = {headers:  {
             "Content-Type" : "application/json",
-            "Authorization" : $token
+            "Authorization" : "Bearer " + getCookie("access_token")
         }
     };
 	$http.get($scope.host + "api/posts"
@@ -50,8 +49,85 @@ angular.module('timphongtro', [])
         });
 	};
 
+    $scope.detailsRoom = function (id) {
+        setCookie("id_curr_room",id,1);
+        window.open("http://localhost:8080/hotel/room-details.php","_self");
+    };
 
-//login
+    $scope.getRoom = function () {
+    var config = {headers:  {
+            "Content-Type" : "application/json",
+            "Authorization" : "Bearer " + getCookie("access_token")
+        }
+    };
+    $http.get($scope.host + "api/posts/" + getCookie("id_curr_room")
+        , config)
+        .then(function(response) {
+        //success   
+            $scope.currPost = response.data;
+            $scope.currPost.lastUpdate = $scope.currPost.lastUpdate.replace("T"," ");
+            if($scope.currPost.numberReviewers == 0)
+                $scope.currPost.rate =  3.0;
+            else
+                $scope.currPost.rate = (0.1)*$scope.currPost.totalPoint/$scope.currPost.numberReviewers;
+            if($scope.currPost.images[0] == null)
+                $scope.currPost.images[0] = "images/photos/8.jpg";
+
+            $scope.getListComment(getCookie("id_curr_room"));
+
+        },function(response) {
+        //Second function handles error
+            $scope.title = "Something wrong";
+            alert($scope.title);
+        });
+    };
+
+    $scope.getListComment = function (id) {
+    var config = {headers:  {
+            "Content-Type" : "application/json",
+            "Authorization" : "Bearer " + getCookie("access_token")
+        }
+    };
+    $http.get($scope.host + "api/posts/" + id +"/comments"
+        , config)
+        .then(function(response) {
+        //success   
+            $scope.currPost.listComment = response.data;
+        },function(response) {
+        //Second function handles error
+            $scope.title = "Something wrong";
+            alert($scope.title);
+        });
+    };
+
+    $scope.addComment = function () {
+    var id =getCookie("id_curr_room");
+    var config = {headers:  {
+            "Content-Type" : "application/json",
+            //"Authorization" : "Bearer " + getCookie("access_token")
+            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1laWQiOiJiYzI2ODY3Yi1lZmU0LTQ5NTktYTgwZS01YTYzNjVmNmI1N2YiLCJ1bmlxdWVfbmFtZSI6ImRja2hvYW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL2FjY2Vzc2NvbnRyb2xzZXJ2aWNlLzIwMTAvMDcvY2xhaW1zL2lkZW50aXR5cHJvdmlkZXIiOiJBU1AuTkVUIElkZW50aXR5IiwiQXNwTmV0LklkZW50aXR5LlNlY3VyaXR5U3RhbXAiOiJjYTY3NWRjNy00NjA3LTRmYjYtYmNhNS1lZTNjOGY5OTYyOGQiLCJyb2xlIjpbIkFkbWluIiwiTGFuZGxvcmQiLCJMb2RnZXIiXSwiaXNzIjoiUGhvbmdUcm9BdXRoZW50aWNhdGlvbiIsImF1ZCI6IjQxNGUxZTM3YTM4ODRmNjhhYmM0M2Y3MjgzODM3ZmQxIiwiZXhwIjoxNDg0MTA2NzM5LCJuYmYiOjE0ODQwMjAzMzl9.GpCllUQ6X4MqB1hM0pYnt9cHqMJjNcsiBrd34S4xDcM"
+        }
+    };
+    var data = {
+        data:{
+            content: document.getElementsByName("contentComment")[0].value
+        }
+    };
+
+    $http.post($scope.host + "api/posts/" + id +"/comments", config,data)
+        .then(function(response) {
+        //success   
+            alert("OK");
+            $window.location.reload();
+        },function(response) {
+        //Second function handles error
+            $scope.title = "Something wrong";
+            alert($scope.title);
+        });
+    };
+
+
+//login-------------------------------------------
     $scope.login = "Đăng Nhập";
     $scope.link_login = "login.php";
     if(getCookie("access_token")){
